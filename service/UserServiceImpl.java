@@ -1,19 +1,30 @@
 package com.Backend.Projects.AirBnb.service;
 
+import com.Backend.Projects.AirBnb.dto.ProfileResponseDto;
+import com.Backend.Projects.AirBnb.dto.UpdateProfileDto;
+import com.Backend.Projects.AirBnb.dto.UserDto;
 import com.Backend.Projects.AirBnb.entities.User;
 import com.Backend.Projects.AirBnb.exceptions.ResourceNotFoundException;
 import com.Backend.Projects.AirBnb.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import static com.Backend.Projects.AirBnb.util.AppUtils.getCurrentUser;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService, UserDetailsService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
+    private final ModelMapper modelMapper;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByEmail(username)
@@ -26,5 +37,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(()-> new ResourceNotFoundException("User not fount with id : " +userId));
+    }
+
+    @Override
+    public void updateProfile(UpdateProfileDto updateProfileDto) {
+        User user = getCurrentUser();
+
+        if(updateProfileDto.getName() != null) user.setName(updateProfileDto.getName());
+        if(updateProfileDto.getDateOfBirth() != null) user.setDateOfBirth(updateProfileDto.getDateOfBirth());
+        if(updateProfileDto.getGender() != null) user.setGender(updateProfileDto.getGender());
+
+        userRepository.save(user);
+    }
+
+    @Override
+    public ProfileResponseDto getMyProfile() {
+        User user = getCurrentUser();
+        log.info("getting the profile for the user with ID : " + user.getId());
+        return modelMapper.map(user, ProfileResponseDto.class);
     }
 }

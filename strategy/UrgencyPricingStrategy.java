@@ -2,7 +2,6 @@ package com.Backend.Projects.AirBnb.strategy;
 
 import com.Backend.Projects.AirBnb.entities.Inventory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

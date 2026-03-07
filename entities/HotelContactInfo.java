@@ -8,8 +8,12 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class HotelContactInfo {
+
     private String address;
+
     private String phone;
+
     private String email;
+
     private String location;
 }

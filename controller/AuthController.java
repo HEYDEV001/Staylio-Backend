@@ -26,15 +26,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signUp")
-    public ResponseEntity<UserDto> signUp(@RequestBody SignUpRequestDto signUpRequestDto){
+    public ResponseEntity<UserDto> signUp(@RequestBody SignUpRequestDto signUpRequestDto) {
         return new ResponseEntity<>(authService.signUp(signUpRequestDto), HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request, HttpServletResponse response){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletRequest request, HttpServletResponse response) {
 
         String[] tokens = authService.login(loginRequestDto);
-        Cookie cookie  = new Cookie("refreshToken", tokens[1]);
+        Cookie cookie = new Cookie("refreshToken", tokens[1]);
         cookie.setHttpOnly(true);
         response.addCookie(cookie);
         return ResponseEntity.ok(new LoginResponseDto(tokens[1]));
@@ -42,15 +42,15 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request, HttpServletResponse response){
-        String refreshToken =  Arrays.stream(request.getCookies())
+    public ResponseEntity<LoginResponseDto> refresh(HttpServletRequest request, HttpServletResponse response) {
+        String refreshToken = Arrays.stream(request.getCookies())
                 .filter(cookie -> "refreshToken".equals(cookie.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new AuthenticationServiceException("Refresh token is not found in the Cookies"));
 
-       String accessToken = authService.refresh(refreshToken);
-       return ResponseEntity.ok(new LoginResponseDto(accessToken));
+        String accessToken = authService.refresh(refreshToken);
+        return ResponseEntity.ok(new LoginResponseDto(accessToken));
 
     }
 

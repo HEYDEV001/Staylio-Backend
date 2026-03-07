@@ -2,7 +2,8 @@ package com.Backend.Projects.AirBnb.security;
 
 import com.Backend.Projects.AirBnb.entities.User;
 import com.Backend.Projects.AirBnb.service.UserService;
-import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,15 +55,14 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authToken);
         }
         filterChain.doFilter(request, response);
-    }catch (io.jsonwebtoken.ExpiredJwtException ex) {
-        // TODO : Remove This Catch Block
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        response.getWriter().write("Access token expired");
-        return;
+    }catch (ExpiredJwtException ex) {
+        handlerExceptionResolver.resolveException(request, response, null, ex);
 
-    }
-    catch (Exception e){
-        handlerExceptionResolver.resolveException(request, response, null, e);
+    } catch (JwtException ex) {
+        handlerExceptionResolver.resolveException(request, response, null, ex);
+
+    } catch (Exception ex) {
+        handlerExceptionResolver.resolveException(request, response, null, ex);
     }
     }
 }

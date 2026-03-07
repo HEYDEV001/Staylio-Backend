@@ -2,7 +2,6 @@ package com.Backend.Projects.AirBnb.strategy;
 
 import com.Backend.Projects.AirBnb.entities.Inventory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
@@ -19,7 +18,7 @@ public class HolidayPricingStrategy implements PricingStrategy{
         BigDecimal price  =wrapped.calculatePrice(inventory);
         boolean isHoliday=true;
         if(isHoliday){
-            price = price.multiply(BigDecimal.valueOf(1.3));
+            price = price.multiply(BigDecimal.valueOf(1.0));
         }
         return price;
 

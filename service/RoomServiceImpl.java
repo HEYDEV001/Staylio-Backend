@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.Backend.Projects.AirBnb.util.AppUtils.getCurrentUser;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -105,5 +107,27 @@ public class RoomServiceImpl implements RoomService {
         roomRepository.deleteById(roomId);
         log.info("Room deleted successfully  with ID {}", roomId);
 
+    }
+
+    @Override
+    @Transactional
+    public RoomDto updateRoom(Long hotelId, Long roomId, RoomDto roomDto) {
+        Hotel hotel = hotelRepository
+                .findById(hotelId)
+                .orElseThrow(() -> new ResourceNotFoundException("hotel not found with the id:" + hotelId));
+
+        User user =getCurrentUser();
+        if (!user.equals(hotel.getOwner())) {
+            throw new UnAuthorizedException("This User with userId " + user.getId() + " is not The owner of this hotel with hotelId  " + hotelId);
+        }
+        Room room = roomRepository
+                .findById(roomId)
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found with id " + roomId));
+
+        modelMapper.map(roomDto, room);
+        room.setId(roomId);
+        room = roomRepository.save(room);
+
+        return modelMapper.map(room, RoomDto.class);
     }
 }

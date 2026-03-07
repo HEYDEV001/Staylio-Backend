@@ -1,15 +1,15 @@
 package com.Backend.Projects.AirBnb.entities;
 
+import com.Backend.Projects.AirBnb.entities.enums.Gender;
 import com.Backend.Projects.AirBnb.entities.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +33,12 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String name;
+
+    private LocalDate dateOfBirth;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
 
     @Override
     public boolean equals(Object o) {

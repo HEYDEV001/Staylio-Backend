@@ -1,6 +1,5 @@
 package com.Backend.Projects.AirBnb.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

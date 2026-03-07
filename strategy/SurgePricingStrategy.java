@@ -2,8 +2,6 @@ package com.Backend.Projects.AirBnb.strategy;
 
 import com.Backend.Projects.AirBnb.entities.Inventory;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
