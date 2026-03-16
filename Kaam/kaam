@@ -1,5 +1,0 @@
-// module 4 ka kaam done
-ChronoUnit.DAYS       will get us the number of days between two dates ( long dateCount = ChronoUnit.DAYS.between(
-                                                                                        bookingRequest.getCheckInDate(),
-                                                                                        bookingRequest.getCheckOutDate()
-                                                                                )+1;  )
