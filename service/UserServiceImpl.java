@@ -1,8 +1,7 @@
 package com.Backend.Projects.AirBnb.service;
 
 import com.Backend.Projects.AirBnb.dto.ProfileResponseDto;
-import com.Backend.Projects.AirBnb.dto.UpdateProfileDto;
-import com.Backend.Projects.AirBnb.dto.UserDto;
+import com.Backend.Projects.AirBnb.dto.UpdatedProfileDto;
 import com.Backend.Projects.AirBnb.entities.User;
 import com.Backend.Projects.AirBnb.exceptions.ResourceNotFoundException;
 import com.Backend.Projects.AirBnb.repository.UserRepository;
@@ -15,6 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.util.Map;
 
 import static com.Backend.Projects.AirBnb.util.AppUtils.getCurrentUser;
 
@@ -40,14 +44,33 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public void updateProfile(UpdateProfileDto updateProfileDto) {
+    public UpdatedProfileDto updateProfile(Map<String,Object> updates) {
         User user = getCurrentUser();
 
-        if(updateProfileDto.getName() != null) user.setName(updateProfileDto.getName());
-        if(updateProfileDto.getDateOfBirth() != null) user.setDateOfBirth(updateProfileDto.getDateOfBirth());
-        if(updateProfileDto.getGender() != null) user.setGender(updateProfileDto.getGender());
+//        if(updateProfileDto.getName() != null) user.setName(updateProfileDto.getName());
+//        if(updateProfileDto.getDateOfBirth() != null) user.setDateOfBirth(updateProfileDto.getDateOfBirth());
+//        if(updateProfileDto.getGender() != null) user.setGender(updateProfileDto.getGender());
 
+        updates.forEach((field, value) -> {
+            Field fieldToBeUpdated = ReflectionUtils.findField(User.class, field);
+            fieldToBeUpdated.setAccessible(true);
+
+            Class<?> fieldType = fieldToBeUpdated.getType();
+
+            // ✅ Handle LocalDate
+            if (fieldType.equals(LocalDate.class) && value instanceof String) {
+                value = LocalDate.parse((String) value);
+            }
+
+            // ✅ Handle ENUM (Gender)
+            if (fieldType.isEnum() && value instanceof String) {
+                value = Enum.valueOf((Class<Enum>) fieldType, (String) value);
+            }
+
+            ReflectionUtils.setField(fieldToBeUpdated, user, value);
+        });
         userRepository.save(user);
+        return modelMapper.map(user, UpdatedProfileDto.class);
     }
 
     @Override

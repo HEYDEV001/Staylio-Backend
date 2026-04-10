@@ -47,8 +47,6 @@ public class HotelController {
         if(startDate == null) startDate = LocalDate.now().minusMonths(1);
         if(endDate == null) endDate = LocalDate.now();
 
-
-
         return ResponseEntity.ok(bookingService.getHotelReport(hotelId, startDate, endDate));
     }
 

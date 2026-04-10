@@ -2,9 +2,11 @@ package com.Backend.Projects.AirBnb.entities;
 
 import com.Backend.Projects.AirBnb.entities.enums.Gender;
 import com.Backend.Projects.AirBnb.entities.enums.Role;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +36,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String name;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfBirth;
 
     @Enumerated(EnumType.STRING)

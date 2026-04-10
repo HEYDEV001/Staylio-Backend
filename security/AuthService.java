@@ -59,7 +59,7 @@ public class AuthService {
     public String refresh(String refreshToken){
         long id = jwtService.getIdFromTheToken(refreshToken);
         User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User does not exist with Id : "+id)
+                () -> new ResourceNotFoundException("User does not exist with Id : " + id )
         );
         return jwtService.generateAccessToken(user);
     }
