@@ -19,7 +19,6 @@ The project demonstrates real-world backend engineering practices including desi
 - **Booking Lifecycle Management** — End-to-end booking flow covering availability checks, reservation, confirmation, and cancellation with proper state transitions.
 - **Role-Based Access Control (RBAC)** — Separate roles for guests, hotel managers, and admins, enforced via Spring Security.
 - **JWT Authentication** — Stateless token-based authentication for secure, scalable API access.
-- **Guest Reviews & Ratings** — Guests can submit reviews post-stay; aggregated ratings are maintained per property.
 - **DTO Layer** — Clean separation between persistence entities and API contracts using Data Transfer Objects.
 - **Global Exception Handling** — Consistent error responses across the application via a centralised exception handler.
 - **Strategy Pattern for Pricing** — Pluggable pricing strategies decoupled from the core booking service, making it easy to add or swap pricing logic.
@@ -175,7 +174,6 @@ stripe.webhook.secret=your_stripe_webhook_secret
 | Rooms | `/rooms` | Room management per hotel |
 | Bookings | `/bookings` | Create, view, cancel bookings |
 | Pricing | `/pricing` | Configure and fetch dynamic prices |
-| Reviews | `/reviews` | Submit and fetch property reviews |
 | Users | `/users` | Profile management |
 
 > Full API documentation (Postman collection / Swagger) can be added as a future enhancement.
