@@ -156,6 +156,12 @@ spring.datasource.username=your_username
 spring.datasource.password=your_password
 
 jwt.secret=your_jwt_secret_key
+
+frontend.url=http://localhost:8080
+
+stripe.secret.key=your_stripe_secret_key
+
+stripe.webhook.secret=your_stripe_webhook_secret
 ```
 
 ---
