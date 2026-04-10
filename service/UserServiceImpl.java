@@ -57,12 +57,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
             Class<?> fieldType = fieldToBeUpdated.getType();
 
-            // ✅ Handle LocalDate
             if (fieldType.equals(LocalDate.class) && value instanceof String) {
                 value = LocalDate.parse((String) value);
             }
 
-            // ✅ Handle ENUM (Gender)
             if (fieldType.isEnum() && value instanceof String) {
                 value = Enum.valueOf((Class<Enum>) fieldType, (String) value);
             }
