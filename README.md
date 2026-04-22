@@ -8,7 +8,7 @@
 
 Staylio-Backend is designed to power a full-scale hotel and short-term rental marketplace. The goal is to provide a scalable, secure, and maintainable RESTful backend that handles everything from property listings and room management to dynamic pricing, booking lifecycle, and guest reviews — all while enforcing role-based access and secure authentication.
 
-The project demonstrates real-world backend engineering practices including design patterns, LLD-driven optimisations, clean layered architecture, and efficient database query design.
+The project demonstrates real-world backend engineering practices, including design patterns, LLD-driven optimisations, clean layered architecture, efficient database query design, and containerized deployment using Docker.
 
 ---
 
