@@ -22,6 +22,7 @@ The project demonstrates real-world backend engineering practices including desi
 - **DTO Layer** — Clean separation between persistence entities and API contracts using Data Transfer Objects.
 - **Global Exception Handling** — Consistent error responses across the application via a centralised exception handler.
 - **Strategy Pattern for Pricing** — Pluggable pricing strategies decoupled from the core booking service, making it easy to add or swap pricing logic.
+- **Dockerized Deployment** — Fully containerised with Docker and Docker Compose for consistent, one-command setup across environments.
 
 ---
 
@@ -82,7 +83,8 @@ Staylio-Backend/
 | Spring Security | Authentication & authorisation |
 | JWT (JSON Web Tokens) | Stateless session management |
 | Spring Data JPA / Hibernate | ORM and database abstraction |
-| PostgreSQL / MySQL | Relational database |
+| PostgreSQL | Relational database |
+| Docker + Docker Compose | Containerisation & service orchestration |
 | Maven | Build and dependency management |
 | Lombok | Boilerplate reduction |
 
@@ -118,15 +120,17 @@ Rather than calculating and updating dynamic prices row-by-row in a loop (the N+
 
 **The Solution:** Spring Security with JWT was used to implement stateless RBAC. Custom filters validate tokens on every request, and method-level security annotations enforce role checks at the service layer — ensuring that, for example, a guest cannot modify another user's booking or access hotel management endpoints.
 
+---
+
 ## Getting Started
 
 ### Prerequisites
 
 - Java 17+
 - Maven 3.8+
-- PostgreSQL or MySQL running locally
+- **PostgreSQL** running locally — OR — **Docker & Docker Compose** (recommended, no manual DB setup needed)
 
-### Setup
+### Option 1 — Running Locally (without Docker)
 
 ```bash
 # Clone the repository
@@ -150,7 +154,7 @@ The server will start on `http://localhost:8080` by default.
 Update your `application.properties` with:
 
 ```properties
-spring.datasource.url=jdbc:postgresql://localhost:5432/staylio
+spring.datasource.url=jdbc:postgresql://staylio-db:5432/staylioDB
 spring.datasource.username=your_username
 spring.datasource.password=your_password
 
@@ -165,6 +169,73 @@ stripe.webhook.secret=your_stripe_webhook_secret
 
 ---
 
+### Option 2 — Running with Docker & Docker Compose (Recommended)
+
+The project is fully Dockerized. Docker Compose spins up both the Spring Boot application and a **PostgreSQL** database together — no manual database installation or configuration required.
+
+#### 1. Clone the repository
+
+```bash
+git clone https://github.com/HEYDEV001/Staylio-Backend.git
+cd Staylio-Backend
+```
+
+#### 2. Build and start all services
+
+```bash
+docker-compose up --build
+```
+
+This single command will:
+- Build the Spring Boot application Docker image
+- Pull the official PostgreSQL image
+- Start both containers with correct networking and environment variables wired up
+- Apply schema on startup via Hibernate DDL
+
+#### 3. Access the application
+
+```
+http://localhost:8080
+```
+
+#### 4. Stop the services
+
+```bash
+# Stop containers (preserves database data)
+docker-compose down
+
+# Stop and remove all containers + volumes (resets database)
+docker-compose down -v
+```
+
+#### Docker Compose Services Summary
+
+| Service | Description | Port |
+|---|---|---|
+| `app` | Spring Boot backend application | `8080` |
+| `db` | PostgreSQL database | `5432` |
+
+#### Useful Docker Commands
+
+```bash
+# View running containers
+docker ps
+
+# Stream application logs
+docker-compose logs -f app
+
+# Stream database logs
+docker-compose logs -f db
+
+# Rebuild only the app after code changes
+docker-compose up --build app
+
+# Open a PostgreSQL shell inside the DB container
+docker exec -it <db_container_name> psql -U your_db_user -d staylio
+```
+
+---
+
 ## API Overview
 
 | Module | Base Path | Description |
@@ -173,7 +244,6 @@ stripe.webhook.secret=your_stripe_webhook_secret
 | Hotels | `/hotels` | List, search, create, update hotels |
 | Rooms | `/rooms` | Room management per hotel |
 | Bookings | `/bookings` | Create, view, cancel bookings |
-| Pricing | `/pricing` | Configure and fetch dynamic prices |
 | Users | `/users` | Profile management |
 
 > Full API documentation (Postman collection / Swagger) can be added as a future enhancement.
