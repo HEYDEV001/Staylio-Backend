@@ -1,0 +1,37 @@
+
+
+services:
+  staylio-db:
+    image: postgres:16
+    container_name: staylio-db
+    environment:
+      - POSTGRES_DB=staylioDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=data@2601
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - staylio-db-data:/var/lib/postgresql/data
+    networks:
+      - staylio-network
+
+  staylio:
+    image: heydev001/staylio:latest
+    container_name: staylio
+    ports:
+      - "8080:8080"
+    networks:
+      - staylio-network
+    depends_on:
+      staylio-db:
+        condition: service_healthy
+
+networks:
+  staylio-network:
+
+
+volumes:
+  staylio-db-data:
